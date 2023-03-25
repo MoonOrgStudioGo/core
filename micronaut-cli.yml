@@ -3,4 +3,4 @@ defaultPackage: com.example
 testFramework: junit
 sourceLanguage: groovy
 buildTool: gradle
-features: [annotation-api, app-name, data, data-r2dbc, gradle, groovy, groovy-application, http-client, jasync-sql, jdbc-hikari, junit, logback, micronaut-build, netty-server, postgres, r2dbc, readme, serialization-jackson, shade, test-resources, vertx-pg-client, yaml]
+features: [annotation-api, app-name, data, data-r2dbc, gradle, groovy, groovy-application, http-client, jasync-sql, jdbc-hikari, junit, logback, micronaut-build, netty-server, postgres, r2dbc, readme, serialization-jackson, shade, vertx-pg-client, yaml]
