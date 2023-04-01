@@ -1,33 +1,32 @@
 package com.example.domains
 
 import com.example.base.entities.BasicEntity
+import groovy.transform.CompileStatic
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.serde.annotation.Serdeable
-import jakarta.persistence.Column
 
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-
+@CompileStatic
 @MappedEntity("core_settings")
 @Serdeable
+@Introspected
 class Settings extends BasicEntity {
 
     static final String TABLE_NAME = "core_settings"
     static final String ENTITY_NAME = "Settings"
 
-    @Column
     @NotNull
     @NotBlank
     private String description
 
-    @Column
     @NotNull
     @NotBlank
     private String value
 
-    @Column
-    @NotNull
+     @NotNull
     @NotBlank
     private String key
 

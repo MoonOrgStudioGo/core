@@ -1,5 +1,5 @@
 plugins {
-    id("groovy") 
+    id("groovy")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("io.micronaut.application") version "3.7.4"
 }
@@ -9,6 +9,17 @@ group = "com.example"
 
 repositories {
     mavenCentral()
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/moonorgstudiogo/baseLibrary")
+            credentials {
+                username = user
+                password = token
+            }
+        }
+    }
 }
 
 dependencies {
@@ -19,18 +30,29 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     implementation("io.micronaut.sql:micronaut-vertx-pg-client")
-    implementation("jakarta.annotation:jakarta.annotation-api")
     compileOnly("io.micronaut:micronaut-http-validation")
     compileOnly("io.micronaut.serde:micronaut-serde-processor")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
     implementation("io.micronaut:micronaut-validation")
     implementation ("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
-    implementation("org.mapstruct:mapstruct:1.5.3.Final")
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation ("org.mapstruct:mapstruct:1.4.2.Final")
+    annotationProcessor ("org.mapstruct:mapstruct-processor:1.4.2.Final")
+    implementation("com.us.base.library:lib:1.0.0")
+
 
 }
 
+sourceSets {
+    main {
+        java { srcDirs = [] }    // no source dirs for the java compiler
+        groovy { srcDirs = ["src/main/java", "src/main/groovy"] }  // compile   everything in src/ with groovy
+    }
+}
 
 application {
     mainClass.set("com.example.Application")
@@ -39,6 +61,7 @@ java {
     sourceCompatibility = JavaVersion.toVersion("17")
     targetCompatibility = JavaVersion.toVersion("17")
 }
+
 
 graalvmNative.toolchainDetection = false
 micronaut {

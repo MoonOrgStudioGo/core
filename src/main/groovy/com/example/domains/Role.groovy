@@ -12,13 +12,13 @@ import javax.validation.constraints.NotBlank
 
 @CompileStatic
 @ToString
-@MappedEntity("core_language")
+@MappedEntity("core_role")
 @Introspected
 @Serdeable
-class Language extends BasicEntity{
+class Role extends BasicEntity{
 
-    static final String TABLE_NAME = "core_language"
-    static final String ENTITY_NAME = "Language"
+    static final String TABLE_NAME = "core_role"
+    static final String ENTITY_NAME = "Role"
 
     @NonNull
     @NotBlank

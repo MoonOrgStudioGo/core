@@ -1,7 +1,7 @@
 package com.example.repositories
 
 
-import com.example.domains.Language
+import com.example.domains.Currency
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.r2dbc.annotation.R2dbcRepository
 import io.micronaut.data.repository.reactive.ReactorPageableRepository
@@ -11,9 +11,9 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @R2dbcRepository(dialect = Dialect.POSTGRES)
-interface LanguageRepository extends ReactorPageableRepository<Language, Long> {
+interface CurrencyRepository extends ReactorPageableRepository<Currency, Long> {
 
-    Mono<Language> findByCode(@NotNull @NotBlank String code)
+    Mono<Currency> findByCode(@NotNull @NotBlank String code)
 
     Mono<Boolean> existsByCode(@NotNull @NotBlank String code)
 }

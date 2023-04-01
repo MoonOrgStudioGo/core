@@ -1,20 +1,19 @@
 package com.example.domains
 
 import com.example.base.entities.BasicEntity
+import groovy.transform.CompileStatic
 import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.NonNull
 import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.data.annotation.Relation
 import io.micronaut.data.annotation.event.PrePersist
 import io.micronaut.data.annotation.event.PreUpdate
 import io.micronaut.serde.annotation.Serdeable
-import jakarta.persistence.Column
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToOne
 
-import javax.validation.constraints.NotBlank
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.sql.Timestamp
 
+@CompileStatic
 @MappedEntity("core_user")
 @Serdeable
 @Introspected
@@ -23,49 +22,30 @@ class User extends BasicEntity{
     public static final String TABLE_NAME = "core_user"
     public static final String ENTITY_NAME = "User"
 
-    //@OneToOne
-    //@JoinColumn(name = "company_id", referencedColumnName = "id")
-    //private Company company
+    private Company company
 
-    @Column
-    @NonNull
-    @NotBlank
     private String username
 
-    @Column
-    @NonNull
-    @NotBlank
     private String password
 
-    @Column
-    @NonNull
-    @NotBlank
     private String email
 
-    @Column
-    @NonNull
-    @NotBlank
     private String telephoneNumber
 
-    @Column
     private String refreshToken
 
-    @Column
-    private Date insertRefreshToken
+    private Timestamp insertRefreshToken
 
-    @Column
     private boolean resetPassword = false
 
-    @OneToOne
-    @JoinColumn(name = "language_id", referencedColumnName = "id")
+    @Relation(Relation.Kind.ONE_TO_ONE)
     private Language language
 
-    // @OneToOne
-    // @JoinColumn(name = "country_id", referencedColumnName = "id")
-    // private Country country
+    @Relation(Relation.Kind.ONE_TO_ONE)
+    private Country country
 
     @Override
-    public String toString(){
+    String toString(){
 
         return "Entity: USER - id = " + getId() + " code: " + getCode() + " insertDate =  " + getInsertDate() + " lastUpdatedDate = " + getLastUpdatedDate() + " username = " + getUsername()
     }
@@ -98,7 +78,7 @@ class User extends BasicEntity{
         return refreshToken
     }
 
-    Date getInsertRefreshToken() {
+    Timestamp getInsertRefreshToken() {
         return insertRefreshToken
     }
 
@@ -130,7 +110,7 @@ class User extends BasicEntity{
         this.refreshToken = refreshToken
     }
 
-    void setInsertRefreshToken(Date insertRefreshToken) {
+    void setInsertRefreshToken(Timestamp insertRefreshToken) {
         this.insertRefreshToken = insertRefreshToken
     }
 
@@ -139,11 +119,27 @@ class User extends BasicEntity{
     }
 
     Language getLanguage() {
-        return language
+        return language;
     }
 
     void setLanguage(Language language) {
         this.language = language
+    }
+
+    Country getCountry() {
+        return country
+    }
+
+    void setCountry(Country country) {
+        this.country = country
+    }
+
+    Company getCompany() {
+        return company
+    }
+
+    void setCompany(Company company) {
+        this.company = company
     }
 
     static Map getQueries() {
@@ -157,10 +153,6 @@ class User extends BasicEntity{
 
 
     static final Map queries = [list: QUERY_LIST]
-
-    void hidPassword(){
-        this.password = null
-    }
 
     @PreUpdate
     void hashPasswordPreUpdate(){

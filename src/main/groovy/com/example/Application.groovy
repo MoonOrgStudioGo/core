@@ -1,12 +1,12 @@
 package com.example
 
-import io.micronaut.runtime.Micronaut
 import groovy.transform.CompileStatic
+import io.micronaut.runtime.Micronaut
 
 @CompileStatic
 class Application {
 
     static void main(String[] args) {
-        Micronaut.run(Application, args)
+        Micronaut.run(Application, args);
     }
 }

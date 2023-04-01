@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-@R2dbcRepository(dialect = Dialect.POSTGRES, dataSource = "default")
+@R2dbcRepository(dialect = Dialect.POSTGRES)
 interface SettingsRepository extends ReactorPageableRepository<Settings, Long> {
 
 
