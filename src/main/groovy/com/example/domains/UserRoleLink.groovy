@@ -1,7 +1,7 @@
 package com.example.domains
 
-import com.example.base.entities.BasicEntity
-import com.example.base.entities.BasicLinkEntity
+import com.us.base.library.entities.BasicEntity
+import com.us.base.library.entities.BasicLinkEntity
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import io.micronaut.core.annotation.Introspected

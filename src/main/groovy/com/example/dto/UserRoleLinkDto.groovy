@@ -1,7 +1,7 @@
 package com.example.dto
 
-import com.example.base.entities.BasicDto
-import com.example.base.entities.BasicEntity
+import com.us.base.library.entities.BasicDto
+import com.us.base.library.entities.BasicEntity
 import com.example.domains.Role
 import com.example.domains.User
 import groovy.transform.CompileStatic

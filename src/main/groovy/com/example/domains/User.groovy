@@ -1,6 +1,6 @@
 package com.example.domains
 
-import com.example.base.entities.BasicEntity
+import com.us.base.library.entities.BasicEntity
 import groovy.transform.CompileStatic
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.annotation.MappedEntity

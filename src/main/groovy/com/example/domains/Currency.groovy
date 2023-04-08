@@ -1,6 +1,6 @@
 package com.example.domains
 
-import com.example.base.entities.BasicEntity
+import com.us.base.library.entities.BasicEntity
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.serde.annotation.Serdeable
 

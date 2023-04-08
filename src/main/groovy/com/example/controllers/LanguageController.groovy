@@ -1,7 +1,7 @@
 package com.example.controllers
 
-import com.example.base.exceptions.EntityNotFoundException
-import com.example.base.httpresponses.ActionCompletedResponse
+import com.us.base.library.exceptions.EntityNotFoundException
+import com.us.base.library.httpresponses.ActionCompletedResponse
 import com.example.domains.Language
 import com.example.dto.LanguageDto
 import com.example.mapper.LanguageMapper

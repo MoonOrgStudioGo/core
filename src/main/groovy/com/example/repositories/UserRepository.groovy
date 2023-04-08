@@ -23,6 +23,10 @@ interface UserRepository extends ReactorPageableRepository<User, Long> {
 
     Mono<Boolean> existsByUsername(@NotNull @NotBlank String username)
 
+    Mono<User> findByRefreshToken(@NotNull @NotBlank String refreshToken)
+
+    Mono<Boolean> existsByRefreshToken(@NotNull @NotBlank String refreshToken)
+
     Mono<Integer> updatePasswordById(Long id, String password)
 
     Mono<Long> updatePassword(@NonNull @NotNull @Id Long id, @NonNull @NotBlank String password)

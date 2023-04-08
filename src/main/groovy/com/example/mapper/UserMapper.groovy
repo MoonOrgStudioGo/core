@@ -8,7 +8,7 @@ import com.example.dto.UserDto
 
 
 import static com.example.Constants.*
-import static com.example.base.utility.Utility.sqlTimestampToString
+import static com.us.base.library.utility.Utility.sqlTimestampToString
 
 class UserMapper {
 
@@ -37,13 +37,13 @@ class UserMapper {
                 insertDate: sqlTimestampToString(user.insertDate, defaultDateFormat),
                 insertRefreshToken: sqlTimestampToString(user.insertRefreshToken, defaultDateFormat),
                 resetPassword: user.resetPassword,
-                languageCode: user.language.code,
-                countryCode: user.country.code,
+                languageCode: user.language,
+                countryCode: user.country,
                 enabled: user.enabled,
                 lastUpdatedDate: sqlTimestampToString(user.lastUpdatedDate, defaultDateFormat),
                 version: user.version,
                 status: user.status,
-                companyCode: user.company.code
+                companyCode: user.company
         )
     }
 }

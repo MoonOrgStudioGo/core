@@ -1,11 +1,12 @@
 package com.example.controllers
 
-import com.example.base.entities.UsernamePasswordCredentials
-import com.example.base.exceptions.CredentialsNotFoundException
-import com.example.base.exceptions.EntityNotFoundException
-import com.example.base.exceptions.NoResetPasswordRequestedException
-import com.example.base.httpresponses.ActionCompletedResponse
-import com.example.base.utility.Utility
+import com.example.base.RefreshTokenCredentials
+import com.us.base.library.entities.UsernamePasswordCredentials
+import com.us.base.library.exceptions.CredentialsNotFoundException
+import com.us.base.library.exceptions.EntityNotFoundException
+import com.us.base.library.exceptions.NoResetPasswordRequestedException
+import com.us.base.library.httpresponses.ActionCompletedResponse
+import com.us.base.library.utility.Utility
 import com.example.domains.Company
 import com.example.domains.Country
 import com.example.domains.Language
@@ -26,13 +27,17 @@ import groovy.transform.CompileStatic
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.*
+import io.micronaut.security.annotation.Secured
+import io.micronaut.security.rules.SecurityRule
 import jakarta.inject.Inject
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 import javax.validation.constraints.NotNull
+import java.sql.Timestamp
 
 @CompileStatic
+@Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/user")
 class UserController {
 
@@ -152,7 +157,46 @@ class UserController {
             } else {
                 throw new CredentialsNotFoundException("Wrong username or password")
             }
-        }
+        }.doOnError(it -> it.message)
+    }
+
+    @Put("/updateRefreshToken")
+    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> updateRefreshToken(@Body RefreshTokenCredentials refreshTokenCredentials) {
+
+        return userRepository.existsByUsername(refreshTokenCredentials.username).flatMap{it ->
+            if (!it){
+                throw new EntityNotFoundException("User not found for username: ${refreshTokenCredentials.username}")
+            }
+            userRepository.findByUsername(refreshTokenCredentials.username).flatMap {
+                it.refreshToken = refreshTokenCredentials.refreshToken
+                it.insertRefreshToken = new Timestamp(new Date().getTime())
+                userRepository.update(it)
+            }
+        }.map {it-> HttpResponse.ok(new ActionCompletedResponse<UserDto>(it.id))}.doOnError{it -> it.message}.log()
+    }
+
+    @Get("/checkRefreshToken")
+    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> checkRefreshToken(@QueryValue String refreshToken){
+        userRepository.existsByRefreshToken(refreshToken).flatMap {it ->
+            if (!it){
+                throw new EntityNotFoundException("User not found for refresh token: ${refreshToken}")
+            }
+            userRepository.findByRefreshToken(refreshToken)
+        }.map {it ->
+            HttpResponse.ok(new ActionCompletedResponse<UserDto>(UserMapper.entityToDto(it)))
+        }.doOnError(it -> it.message)
+    }
+
+    @Get("/getRefreshToken")
+    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> getRefreshToken(@QueryValue String username, @CookieValue("JWT") jwtRefreshToken){
+        userRepository.existsByUsername(username).flatMap {it ->
+            if (!it){
+                throw new EntityNotFoundException("User not found for username: ${username}")
+            }
+            userRepository.findByUsername(username)
+        }.map {it ->
+            HttpResponse.ok(new ActionCompletedResponse<UserDto>(UserMapper.entityToDto(it)))
+        }.doOnError(it -> it.message)
     }
 
 }

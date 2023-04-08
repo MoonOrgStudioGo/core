@@ -1,6 +1,6 @@
 package com.example.dto
 
-import com.example.base.entities.DtoWithStatusAndCode
+import com.us.base.library.entities.DtoWithStatusAndCode
 import com.example.domains.Country
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
