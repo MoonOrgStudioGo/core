@@ -12,8 +12,27 @@ micronaut:
     cors:
       enabled: true
   security:
+    redirect:
+      enabled: true
+    authentication: cookie # <1>
     ip-patterns:
-      - 127.0.0.1
+      - 127.0.0.1.*
+      - 0:0:0:0:0:0:0:1
+    jwt:
+      cookie:
+        cookie-secure: true
+        cookie-same-site: None
+      signatures:
+        secret:
+          generator:
+            secret: pleaseChangeThisSecretForANewOneEeEeEeEeEeEe
+            base64: true
+            jws-algorithm: HS256
+      generator:
+        refresh-token:
+          secret: pleaseChangeThisSecretForANewOneEeEeEeEeEeEe
+          base64: true
+          jws-algorithm: HS256
 
 r2dbc:
   datasources:

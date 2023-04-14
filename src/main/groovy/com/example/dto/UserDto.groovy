@@ -5,6 +5,8 @@ import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import io.micronaut.serde.annotation.Serdeable
 
+import javax.validation.constraints.NotNull
+
 @CompileStatic
 @ToString
 @Serdeable
@@ -12,12 +14,16 @@ class UserDto extends DtoWithStatusAndCode{
 
     private String companyCode
 
+    @NotNull
     private String username
 
+    @NotNull
     private String password
 
+    @NotNull
     private String email
 
+    @NotNull
     private String telephoneNumber
 
     private String refreshToken
@@ -26,8 +32,10 @@ class UserDto extends DtoWithStatusAndCode{
 
     private boolean resetPassword
 
+    @NotNull
     private String languageCode
 
+    @NotNull
     private String countryCode
 
     String getUsername() {

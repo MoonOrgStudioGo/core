@@ -1,8 +1,9 @@
 package com.example.controllers
 
 import com.example.base.RefreshTokenCredentials
+import com.java.example.records.user.UserFindByRecord
 import com.us.base.library.entities.UsernamePasswordCredentials
-import com.us.base.library.exceptions.CredentialsNotFoundException
+import com.us.base.library.entities.implementations.CoreSessionData
 import com.us.base.library.exceptions.EntityNotFoundException
 import com.us.base.library.exceptions.NoResetPasswordRequestedException
 import com.us.base.library.httpresponses.ActionCompletedResponse
@@ -18,12 +19,13 @@ import com.example.mapper.UserMapper
 import com.example.mapper.UserRoleLinkMapper
 import com.example.repositories.RoleRepository
 import com.example.repositories.UserRoleLinkRepository
-import com.java.example.UserRecord
+import com.java.example.records.user.UserRecord
 import com.example.repositories.CompanyRepository
 import com.example.repositories.CountryRepository
 import com.example.repositories.LanguageRepository
 import com.example.repositories.UserRepository
 import groovy.transform.CompileStatic
+import io.micronaut.core.annotation.NonNull
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.*
@@ -33,12 +35,13 @@ import jakarta.inject.Inject
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
+import javax.validation.Valid
 import javax.validation.constraints.NotNull
 import java.sql.Timestamp
 
 @CompileStatic
-@Secured(SecurityRule.IS_ANONYMOUS)
-@Controller("/user")
+@Secured(SecurityRule.IS_AUTHENTICATED)
+@Controller("api/user")
 class UserController {
 
     @Inject
@@ -60,12 +63,13 @@ class UserController {
     UserRoleLinkRepository userRoleLinkRepository
 
     @Get("/{id}")
-    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> findById(Long id) {
+    Mono<MutableHttpResponse<ActionCompletedResponse<UserFindByRecord>>> findById(@RequestAttribute("sessionData") CoreSessionData sessionData, Long id) {
         return userRepository.existsById(id).flatMap{result ->
                 if (!result){
                     throw new EntityNotFoundException("User not found for id: ${id}")
                 }
-            userRepository.findById(id).flatMap{user-> Mono.just(HttpResponse.ok(new ActionCompletedResponse<UserDto>(UserMapper.entityToDto(user))))}
+            File f = new File("/Users/alessandro/aleProject/core/a.txt")
+            userRepository.findByIdEquals(id).map{user-> HttpResponse.ok(new ActionCompletedResponse<UserFindByRecord>(user))}
         }.doOnError {it -> it.message}.log()
     }
 
@@ -75,27 +79,34 @@ class UserController {
     }
 
     @Post("/")
-    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> save(UserDto userDto) {
+    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> save(@NonNull @Valid UserDto userDto) {
 
-        return Mono.zip(languageRepository.existsByCode(userDto.languageCode).flatMap { resultLanguage ->
-            if (!resultLanguage) {
-                throw new EntityNotFoundException("Language not found for code: ${userDto.languageCode}")
-            }
-            languageRepository.findByCode(userDto.languageCode)} as Mono<Language>,
+        return Mono.zip(
+
+                //Check language
+                languageRepository.existsByCode(userDto.languageCode).flatMap { resultLanguage ->
+                    if (!resultLanguage) {
+                        throw new EntityNotFoundException("Language not found for code: ${userDto.languageCode}")
+                    }
+                    languageRepository.findByCode(userDto.languageCode)} as Mono<Language>,
+
+                //Check country
                 countryRepository.existsByCode(userDto.countryCode).flatMap { resultCountry ->
                     if (!resultCountry) {
                         throw new EntityNotFoundException("Country not found for code: ${userDto.countryCode}")
                     }
                     countryRepository.findByCode(userDto.countryCode)} as Mono<Country>,
-                companyRepository.existsByCode(userDto.companyCode).flatMap { resultCountry ->
-                if (!resultCountry) {
+
+                //Check Company
+                companyRepository.existsByCode(userDto.companyCode).flatMap { resultCompany ->
+                if (!resultCompany) {
                     throw new EntityNotFoundException("Company not found for code: ${userDto.companyCode}")
                 }
                 companyRepository.findByCode(userDto.companyCode)} as Mono<Company>
             )
                 .flatMap{tuple -> userRepository.save(UserMapper.dtoToEntity(userDto, tuple.getT1(), tuple.getT2(), tuple.getT3()))
-                        .flatMap{insertedUser->
-                            Mono.just(HttpResponse.created(new ActionCompletedResponse<UserDto>(insertedUser.id)))}}.log()
+                        .map{insertedUser->
+                           HttpResponse.created(new ActionCompletedResponse<UserDto>(insertedUser.id))}}.doOnError {it -> it.message}.log()
     }
 
     @Put("/{id}")
@@ -144,22 +155,7 @@ class UserController {
                             Mono.just(HttpResponse.created(new ActionCompletedResponse<UserDto>(insertedUser.id)))}}.log()
     }
 
-    @Post("/checkCredentials")
-    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> checkCredentials(UsernamePasswordCredentials credentials){
-        userRepository.existsByUsername(credentials.username).flatMap {it ->
-            if (!it){
-                throw new EntityNotFoundException("User not found for username: ${credentials.username}")
-            }
-            userRepository.findByUsername(credentials.username)
-        }.flatMap {it ->
-            if (Utility.hashPassword(credentials.password) == it.password){
-                return Mono.just(HttpResponse.ok(new ActionCompletedResponse<UserDto>()))
-            } else {
-                throw new CredentialsNotFoundException("Wrong username or password")
-            }
-        }.doOnError(it -> it.message)
-    }
-
+    @Secured(SecurityRule.IS_ANONYMOUS)
     @Put("/updateRefreshToken")
     Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> updateRefreshToken(@Body RefreshTokenCredentials refreshTokenCredentials) {
 
@@ -174,6 +170,90 @@ class UserController {
             }
         }.map {it-> HttpResponse.ok(new ActionCompletedResponse<UserDto>(it.id))}.doOnError{it -> it.message}.log()
     }
+
+    @Put("/checkCredentials")
+    @Secured(SecurityRule.IS_ANONYMOUS)
+    Mono<MutableHttpResponse<ActionCompletedResponse<Map>>> checkCredentials(@Body UsernamePasswordCredentials credentials){
+
+        return userRepository.existsByUsername(credentials.username).flatMap {userExists ->
+            if (!userExists){
+                throw new EntityNotFoundException("User not found for username: ${credentials.username}")
+            }
+            userRepository.findByUsername(credentials.username)
+        }.flatMap {user ->
+
+            Long companyId = user.company.id != null ? user.company.id : -1
+            Long languageId = user.language.id != null ? user.language.id : -1
+            Long countryId = user.country.id != null ? user.country.id : -1
+            String hashedPw = Utility.hashPassword(credentials.password)
+
+            if (user.password != hashedPw){
+                throw new EntityNotFoundException("Wrong password")
+            }
+
+            Mono.zip(
+                    companyRepository.existsById(companyId)
+                        .flatMap {companyExists ->
+                            if (companyExists){
+                                companyRepository.findById(companyId)
+                                        .flatMap {it ->
+                                            Mono.just(it.code)
+                                        }
+                            } else {
+                                Mono.just("")
+                            }
+                        },
+                    languageRepository.existsById(languageId)
+                        .flatMap {languageExists ->
+                            if (languageExists){
+                                languageRepository.findById(languageId)
+                                        .flatMap {it ->
+                                            Mono.just(it.code)
+                                        }
+                            }
+                        },
+                    countryRepository.existsById(countryId)
+                        .flatMap {countryExists ->
+                            if (countryExists){
+                                countryRepository.findById(countryId)
+                                    .flatMap {it ->
+                                        Mono.just(it.code)
+                                    }
+                            }
+                        },
+                    userRoleLinkRepository.findAllCodeRoleByUserId(user.id).collectList()
+            ).flatMap {tuple ->
+                String companyCode  = tuple.getT1()
+                String languageCode = tuple.getT2()
+                String countryCode = tuple.getT3()
+                List rolesList = tuple.getT4()
+
+                Mono.just(HttpResponse.ok(new ActionCompletedResponse<Map>([username: user.username, attributes: [companyCode: companyCode, languageCode: languageCode, countryCode: countryCode], roles: rolesList])))
+            }
+        }
+
+
+
+       /* Mono.zip(languageRepository.existsByCode(userDto.languageCode).flatMap { resultLanguage ->
+                if (!resultLanguage) {
+                    throw new EntityNotFoundException("Language not found for code: ${userDto.languageCode}")
+                }
+                languageRepository.findByCode(userDto.languageCode)} as Mono<Language>,
+            countryRepository.existsByCode(userDto.countryCode).flatMap { resultCountry ->
+                if (!resultCountry) {
+                    throw new EntityNotFoundException("Country not found for code: ${userDto.countryCode}")
+                }
+                countryRepository.findByCode(userDto.countryCode)} as Mono<Country>,
+            companyRepository.existsByCode(userDto.companyCode).flatMap { resultCountry ->
+                if (!resultCountry) {
+                    throw new EntityNotFoundException("Company not found for code: ${userDto.companyCode}")
+                }
+            companyRepository.findByCode(userDto.companyCode)} as Mono<Company>
+    )
+    .flatMap{tuple -> userRepository.save(UserMapper.dtoToEntity(userDto, tuple.getT1(), tuple.getT2(), tuple.getT3()))
+            .flatMap{insertedUser->
+                Mono.just(HttpResponse.created(new ActionCompletedResponse<UserDto>(insertedUser.id)))}}.log()*/
+}
 
     @Get("/checkRefreshToken")
     Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> checkRefreshToken(@QueryValue String refreshToken){

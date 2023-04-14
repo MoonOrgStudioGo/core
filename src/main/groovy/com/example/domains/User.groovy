@@ -21,6 +21,7 @@ class User extends BasicEntity{
 
     public static final String TABLE_NAME = "core_user"
     public static final String ENTITY_NAME = "User"
+    public static final String STATO = "ST_USER"
 
     private Company company
 
