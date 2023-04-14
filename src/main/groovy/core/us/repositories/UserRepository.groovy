@@ -3,7 +3,8 @@ package core.us.repositories
 
 import com.java.example.records.user.UserFindByRecord
 import com.java.example.records.user.UserRecord
-import core.us.domains.User
+import com.us.base.library.entities.core.domains.User
+
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.Query
@@ -39,7 +40,7 @@ interface UserRepository extends ReactorPageableRepository<User, Long> {
     Flux<UserRecord> list();
 
     @Query("""SELECT u.id as id, u.username as username, u.email as email, u.telephone_number, to_char(u.insert_date,'dd/mm/yyyy hh-MM') as insert_date_string,
-                     to_char(u.last_updated_date,'dd/mm/yyyy hh-MM') as last_updated_date_string, u.code,fn_get_status_description('ST_USER', u.status, l.code) as status_description, 
+                     to_char(u.last_updated_date,'dd/mm/yyyy hh-MM') as last_updated_date_string, u.code,public.fn_get_status_description('ST_USER', u.status, l.code) as status_description, 
                      u.status as status, u.reset_password, 
                     l.id  as language_id, l.code as language_code, 
                     comp.id as company_id, comp.code as company_code,

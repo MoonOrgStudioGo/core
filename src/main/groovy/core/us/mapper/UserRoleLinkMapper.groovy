@@ -1,8 +1,8 @@
 package core.us.mapper
 
-import core.us.domains.Role
-import core.us.domains.User
-import core.us.domains.UserRoleLink
+import com.us.base.library.entities.core.domains.Role
+import com.us.base.library.entities.core.domains.User
+import com.us.base.library.entities.core.domains.UserRoleLink
 import core.us.dto.UserRoleLinkDto
 
 class UserRoleLinkMapper {

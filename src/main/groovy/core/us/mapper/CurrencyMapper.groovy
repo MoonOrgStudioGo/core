@@ -1,6 +1,6 @@
 package core.us.mapper
 
-import core.us.domains.Currency
+import com.us.base.library.entities.core.domains.Currency
 import core.us.dto.CurrencyDto
 
 class CurrencyMapper {

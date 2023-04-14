@@ -1,7 +1,7 @@
 package core.us.mapper
 
-import core.us.domains.Company
-import core.us.domains.Country
+import com.us.base.library.entities.core.domains.Company
+import com.us.base.library.entities.core.domains.Country
 import core.us.dto.CompanyDto
 
 class CompanyMapper {

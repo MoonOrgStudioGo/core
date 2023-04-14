@@ -1,6 +1,6 @@
 package core.us.repositories
 
-import core.us.domains.Country
+import com.us.base.library.entities.core.domains.Country
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.r2dbc.annotation.R2dbcRepository
 import io.micronaut.data.repository.reactive.ReactorPageableRepository

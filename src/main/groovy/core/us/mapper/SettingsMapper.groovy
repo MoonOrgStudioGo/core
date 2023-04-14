@@ -1,6 +1,6 @@
 package core.us.mapper
 
-import core.us.domains.Settings
+import com.us.base.library.entities.core.domains.Settings
 import core.us.dto.SettingsDto
 
 class SettingsMapper {

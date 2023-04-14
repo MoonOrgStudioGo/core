@@ -6,9 +6,13 @@ import com.us.base.library.entities.beans.CoreSessionData
 import com.us.base.library.entities.beans.exceptions.exceptions.EntityNotFoundException
 import com.us.base.library.entities.beans.exceptions.exceptions.NoResetPasswordRequestedException
 import com.us.base.library.entities.beans.httpresponses.ActionCompletedResponse
+import com.us.base.library.entities.core.domains.Company
+import com.us.base.library.entities.core.domains.Country
+import com.us.base.library.entities.core.domains.Language
+import com.us.base.library.entities.core.domains.Role
+import com.us.base.library.entities.core.domains.User
 import com.us.base.library.utility.Utility
 import core.us.base.security.RefreshTokenCredentials
-import core.us.domains.*
 import core.us.dto.UserDto
 import core.us.dto.UserRoleLinkDto
 import core.us.mapper.UserMapper
@@ -180,7 +184,7 @@ class UserController {
             Long countryId = user.country.id != null ? user.country.id : -1
             String hashedPw = Utility.hashPassword(credentials.password)
 
-            if (user.password != hashedPw){
+            if (user.getPassword() != hashedPw){
                 throw new EntityNotFoundException("Wrong password")
             }
 

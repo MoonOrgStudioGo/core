@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: corenew
+    name: core
   ssl:
     enabled: true
     build-self-signed: true

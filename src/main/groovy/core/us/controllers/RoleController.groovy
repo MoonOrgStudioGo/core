@@ -2,7 +2,7 @@ package core.us.controllers
 
 import com.us.base.library.entities.beans.exceptions.exceptions.EntityNotFoundException
 import com.us.base.library.entities.beans.httpresponses.ActionCompletedResponse
-import core.us.domains.Role
+import com.us.base.library.entities.core.domains.Role
 import core.us.dto.RoleDto
 import core.us.mapper.RoleMapper
 import core.us.repositories.RoleRepository

@@ -1,8 +1,7 @@
 package core.us.mapper
 
-import core.us.domains.Country
-import core.us.domains.Currency
-import core.us.domains.Language
+import com.us.base.library.entities.core.domains.Country
+import com.us.base.library.entities.core.domains.Language
 import core.us.dto.CountryDto
 
 class CountryMapper {

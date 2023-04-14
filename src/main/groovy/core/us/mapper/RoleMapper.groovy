@@ -1,6 +1,6 @@
 package core.us.mapper
 
-import core.us.domains.Role
+import com.us.base.library.entities.core.domains.Role
 import core.us.dto.RoleDto
 
 class RoleMapper {

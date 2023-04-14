@@ -2,6 +2,7 @@ package core.us.controllers
 
 import com.us.base.library.entities.beans.exceptions.exceptions.EntityNotFoundException
 import com.us.base.library.entities.beans.httpresponses.ActionCompletedResponse
+import com.us.base.library.entities.core.domains.Settings
 import core.us.dto.SettingsDto
 import core.us.mapper.SettingsMapper
 import core.us.repositories.SettingsRepository

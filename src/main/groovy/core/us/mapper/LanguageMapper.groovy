@@ -1,6 +1,6 @@
 package core.us.mapper
 
-import core.us.domains.Language
+import com.us.base.library.entities.core.domains.Language
 import core.us.dto.LanguageDto
 
 class LanguageMapper {

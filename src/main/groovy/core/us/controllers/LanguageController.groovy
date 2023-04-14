@@ -2,7 +2,7 @@ package core.us.controllers
 
 import com.us.base.library.entities.beans.exceptions.exceptions.EntityNotFoundException
 import com.us.base.library.entities.beans.httpresponses.ActionCompletedResponse
-import core.us.domains.Language
+import com.us.base.library.entities.core.domains.Language
 import core.us.dto.LanguageDto
 import core.us.mapper.LanguageMapper
 import core.us.repositories.LanguageRepository

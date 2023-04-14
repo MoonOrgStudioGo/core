@@ -119,4 +119,6 @@ class UserDto extends DtoWithStatusAndCode{
     void setCompanyCode(String companyCode) {
         this.companyCode = companyCode
     }
+
+
 }

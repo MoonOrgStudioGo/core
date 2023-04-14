@@ -1,7 +1,6 @@
 package core.us.repositories
 
-
-import core.us.domains.UserRoleLink
+import com.us.base.library.entities.core.domains.UserRoleLink
 import io.micronaut.data.annotation.Query
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.r2dbc.annotation.R2dbcRepository

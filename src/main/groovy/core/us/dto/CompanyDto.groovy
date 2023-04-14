@@ -2,7 +2,7 @@ package core.us.dto
 
 
 import com.us.base.library.entities.abstracts.classes.DtoWithStatusAndCode
-import core.us.domains.Country
+import com.us.base.library.entities.core.domains.Country
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
 

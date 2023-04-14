@@ -1,10 +1,9 @@
 package core.us.mapper
 
-import com.us.base.library.utility.Utility
-import core.us.domains.Company
-import core.us.domains.Country
-import core.us.domains.Language
-import core.us.domains.User
+import com.us.base.library.entities.core.domains.Company
+import com.us.base.library.entities.core.domains.Country
+import com.us.base.library.entities.core.domains.Language
+import com.us.base.library.entities.core.domains.User
 import core.us.dto.UserDto
 
 import static com.us.base.library.utility.Utility.sqlTimestampToString
@@ -25,7 +24,7 @@ class UserMapper {
         )
     }
 
-    static UserDto entityToDto(User user){
+    static UserDto entityToDto(com.us.base.library.entities.core.domains.User user){
 
         new UserDto(
                 id: user.id,
