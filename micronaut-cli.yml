@@ -1,5 +1,5 @@
 applicationType: default
-defaultPackage: com.example
+defaultPackage: com.us.core
 testFramework: junit
 sourceLanguage: groovy
 buildTool: gradle

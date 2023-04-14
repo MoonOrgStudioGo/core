@@ -5,7 +5,7 @@ plugins {
 }
 
 version = "0.1"
-group = "com.example"
+group = "com.us.core"
 
 repositories {
     mavenCentral()
@@ -25,18 +25,15 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.data:micronaut-data-r2dbc")
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut:micronaut-http-validation")
-    compileOnly("io.micronaut.serde:micronaut-serde-processor")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
     implementation("io.micronaut:micronaut-validation")
     implementation ("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut:micronaut-http-client")
-    implementation("com.us.base.library:lib:1.0.11")
+    implementation("com.us.base.library:lib:1.0.20")
     implementation('org.bouncycastle:bcpkix-jdk15on:1.70')
     implementation("io.micronaut:micronaut-jackson-databind")
 
@@ -53,7 +50,7 @@ sourceSets {
 }
 
 application {
-    mainClass.set("com.example.Application")
+    mainClass.set("core.us.Application")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
@@ -67,7 +64,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("com.example.*")
+        annotations("core.us.*")
     }
 }
 
