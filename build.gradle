@@ -9,7 +9,6 @@ group = "com.us.core"
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {
         name = "GitHubPackages"
         url = uri("https://maven.pkg.github.com/moonorgstudiogo/baseLibrary")
@@ -27,18 +26,24 @@ dependencies {
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
     compileOnly("io.micronaut:micronaut-http-validation")
     runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("ch.qos.logback:logback-core")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
     implementation("io.micronaut:micronaut-validation")
     implementation ("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     implementation("io.micronaut:micronaut-http-client")
-    implementation("com.us.base.library:lib:1.0.26")
+    implementation("com.us.base.library:lib:1.0.0")
     implementation('org.bouncycastle:bcpkix-jdk15on:1.70')
     implementation("io.micronaut:micronaut-jackson-databind")
 
+    implementation("org.slf4j:slf4j-api")
+
     //security
     implementation("io.micronaut.security:micronaut-security-jwt")
+
+    //Fixa i bug nei log
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
 }
 

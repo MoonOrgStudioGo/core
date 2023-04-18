@@ -1,9 +1,6 @@
 micronaut:
   application:
     name: core
-  ssl:
-    enabled: true
-    build-self-signed: true
   server:
     ssl:
       enabled: true
@@ -37,10 +34,11 @@ micronaut:
 r2dbc:
   datasources:
     default:
+      database: postgres
       driver-class-name: org.postgresql.Driver
-      schema-generate: CREATE
+      schema-generate: NONE
       dialect: POSTGRES
-      url: r2dbc:postgresql://localhost:5438/postgres
+      url: r2dbc:postgresql://localhost:5438/postgres?currentSchema=core
       username: 'postgres'
       password: 'postgres'
 netty:

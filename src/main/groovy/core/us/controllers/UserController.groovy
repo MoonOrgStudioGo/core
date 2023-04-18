@@ -63,9 +63,6 @@ class UserController {
             if (!result){
                 throw new EntityNotFoundException("User not found for id: ${id}")
             }
-            File f = new File("/Users/alessandro/aleProject/core/a.txt")
-            f.createNewFile()
-            f.append(sessionData.username)
             userRepository.findByIdEquals(id).map{user-> HttpResponse.ok(new ActionCompletedResponse<UserFindByRecord>(user))}
         }.doOnError {it -> it.message}.log()
     }
@@ -179,7 +176,7 @@ class UserController {
             userRepository.findByUsername(credentials.username)
         }.flatMap {user ->
 
-            Long companyId = user.company.id != null ? user.company.id : -1
+            Long companyId = user.company?.id ? user.company.id : -1
             Long languageId = user.language.id != null ? user.language.id : -1
             Long countryId = user.country.id != null ? user.country.id : -1
             String hashedPw = Utility.hashPassword(credentials.password)
