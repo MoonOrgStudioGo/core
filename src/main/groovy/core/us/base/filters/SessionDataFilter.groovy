@@ -41,12 +41,10 @@ class SessionDataFilter implements HttpServerFilter, Ordered {
             cookieString = cookie.value
             chunks = cookieString.split("\\.")
             payload = new String(decoder.decode(chunks[1]))
-            File f = new File("/Users/alessandro/aleProject/core/b.txt")
 
             sessionDataMap = mapper.readValue(payload, Map)
             sessionData = new CoreSessionData(sessionDataMap.sub as String, sessionDataMap.companyCode as String, sessionDataMap.languageCode as String, sessionDataMap.countryCode as String)
             request.setAttribute("sessionData", mapper.convertValue(sessionData, Map))
-            f.append("PROCASCoc")
 
         } else {
             sessionData = new CoreSessionData()
