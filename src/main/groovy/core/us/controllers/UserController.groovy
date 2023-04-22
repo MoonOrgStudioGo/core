@@ -72,8 +72,9 @@ class UserController {
         return userRepository.list()
     }
 
-    @Post("/")
-    Mono<MutableHttpResponse<ActionCompletedResponse<UserDto>>> save(@NonNull @Valid UserDto userDto) {
+    @Post
+    @Secured(SecurityRule.IS_ANONYMOUS)
+    Mono<MutableHttpResponse<ActionCompletedResponse>> save(@NonNull @Valid UserDto userDto) {
 
         return Mono.zip(
 
@@ -92,15 +93,16 @@ class UserController {
                     countryRepository.findByCode(userDto.countryCode)} as Mono<Country>,
 
                 //Check Company
-                companyRepository.existsByCode(userDto.companyCode).flatMap { resultCompany ->
-                if (!resultCompany) {
-                    throw new EntityNotFoundException("Company not found for code: ${userDto.companyCode}")
-                }
-                companyRepository.findByCode(userDto.companyCode)} as Mono<Company>
+                companyRepository.findByCode(userDto.companyCode).switchIfEmpty {
+                    Mono.just(new Company()).subscribe(it)
+                } as Mono<Company>
             )
-                .flatMap{tuple -> userRepository.save(UserMapper.dtoToEntity(userDto, tuple.getT1(), tuple.getT2(), tuple.getT3()))
-                        .map{insertedUser->
-                           HttpResponse.created(new ActionCompletedResponse<UserDto>(insertedUser.id))}}.doOnError {it -> it.message}.log()
+                .flatMap{tuple -> {
+                    userDto.code = userDto.username
+                    userRepository.save(UserMapper.dtoToEntity(userDto, tuple.getT1(), tuple.getT2(), tuple.getT3()))
+                            .map{insertedUser->
+                                HttpResponse.created(new ActionCompletedResponse<UserDto>(insertedUser.id))}
+                }}.doOnError {it -> it.message}.log() as Mono<MutableHttpResponse<ActionCompletedResponse>>
     }
 
     @Put("/{id}")

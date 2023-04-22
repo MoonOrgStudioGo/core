@@ -9,7 +9,6 @@ import jakarta.persistence.Column
 @ToString
 class CountryDto extends DtoWithStatusAndCode{
 
-    @Column
     private String description
 
     private String currencyCode
