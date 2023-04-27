@@ -4,7 +4,6 @@ package core.us.repositories
 import com.java.example.records.user.UserFindByRecord
 import com.java.example.records.user.UserRecord
 import com.us.base.library.entities.core.domains.User
-
 import io.micronaut.core.annotation.NonNull
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.Query
